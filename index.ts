@@ -1,0 +1,39 @@
+import type { PluginAPI } from "./tests/__mocks__/openclaw-types.js";
+import { registerPluginHooksFromDir } from "./tests/__mocks__/openclaw-types.js";
+import { registerDojoCommands } from "./src/commands/router.js";
+import { registerOrchestrationTools } from "./src/orchestration/tool-registry.js";
+import { initStateManager } from "./src/state/manager.js";
+import { homedir } from "os";
+import { join } from "path";
+
+export default {
+  id: "dojo-genesis",
+  name: "Dojo Genesis",
+
+  configSchema: {
+    type: "object" as const,
+    properties: {
+      projectsDir: {
+        type: "string" as const,
+        default: "dojo-genesis",
+        description: "State directory name under OpenClaw config",
+      },
+    },
+  },
+
+  register(api: PluginAPI) {
+    let stateDir: string;
+    try {
+      stateDir = api.runtime.state.resolveStateDir("dojo-genesis");
+    } catch {
+      stateDir = join(homedir(), ".openclaw");
+    }
+
+    initStateManager(stateDir);
+    registerDojoCommands(api);
+    registerOrchestrationTools(api);
+    registerPluginHooksFromDir(api, "./hooks");
+
+    api.logger.info("Dojo Genesis plugin initialized");
+  },
+};
