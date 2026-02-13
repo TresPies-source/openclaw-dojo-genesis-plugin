@@ -5,11 +5,6 @@ import { initStateManager } from "./src/state/manager.js";
 import { homedir } from "os";
 import { join } from "path";
 
-// Hook handlers
-import beforeAgentStartHandler from "./hooks/before-agent-start/handler.js";
-import afterToolCallHandler from "./hooks/after-tool-call/handler.js";
-import agentEndHandler from "./hooks/agent-end/handler.js";
-
 export default {
   id: "dojo-genesis-plugin",
   name: "Dojo Genesis",
@@ -37,10 +32,7 @@ export default {
     registerDojoCommands(api);
     registerOrchestrationTools(api);
 
-    // Register hooks manually
-    api.hooks.register("before-agent-start", beforeAgentStartHandler);
-    api.hooks.register("after-tool-call", afterToolCallHandler);
-    api.hooks.register("agent-end", agentEndHandler);
+    // Hooks are auto-discovered from ./hooks/ directory by OpenClaw
 
     api.logger.info("Dojo Genesis plugin initialized");
   },
