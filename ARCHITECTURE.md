@@ -38,7 +38,7 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 │    │        └─────────────────────┘                          │
 │    │                                                         │
 │    │  ┌──────────────────────────────────────────────────┐  │
-│    │  │ Plugin: @openclaw/dojo-genesis-plugin                    │  │
+│    │  │ Plugin: @trespies-source/dojo-genesis-plugin                    │  │
 │    │  │                                                   │  │
 │    │  │  register(api) {                                  │  │
 │    │  │    api.registerCommand("dojo", handler)           │  │
@@ -83,7 +83,7 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 ### Directory Layout
 
 ```
-@openclaw/dojo-genesis-plugin/
+@trespies-source/dojo-genesis-plugin/
 ├── package.json                    # Plugin manifest with openclaw.extensions
 ├── index.ts                        # Plugin entry: register(api) function
 ├── src/
@@ -133,7 +133,7 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 
 ```json
 {
-  "name": "@openclaw/dojo-genesis-plugin",
+  "name": "@trespies-source/dojo-genesis-plugin",
   "version": "0.1.0",
   "description": "Specification-driven development orchestration for OpenClaw. 44 behavioral skills organized into 7 categories: STRATEGIZE, SPECIFY, REMEMBER, OBSERVE, LEARN, ORCHESTRATE, BUILD.",
   "openclaw.extensions": "index.ts",
@@ -623,7 +623,7 @@ Users install the plugin via:
 
 ```bash
 # Install plugin
-openclaw plugins install @openclaw/dojo-genesis-plugin
+openclaw plugins install @trespies-source/dojo-genesis-plugin
 
 # Or install individual skills from ClawHub
 npx clawhub@latest install dojo-genesis-plugin-strategic-scout
@@ -676,7 +676,7 @@ After installation, add to `~/.openclaw/openclaw.json`:
 - [ ] Security audit (ClawHavoc compliance)
 - [ ] Write README and documentation
 - [ ] Publish to ClawHub
-- [ ] Publish plugin to npm as `@openclaw/dojo-genesis-plugin`
+- [ ] Publish plugin to npm as `@trespies-source/dojo-genesis-plugin`
 
 ---
 

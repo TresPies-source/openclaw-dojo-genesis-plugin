@@ -1,6 +1,6 @@
 # Dojo Genesis Plugin for OpenClaw
 
-[![npm version](https://img.shields.io/npm/v/@openclaw/dojo-genesis-plugin.svg)](https://www.npmjs.com/package/@openclaw/dojo-genesis-plugin)
+[![npm version](https://img.shields.io/npm/v/@trespies-source/dojo-genesis-plugin.svg)](https://www.npmjs.com/package/@trespies-source/dojo-genesis-plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenClaw Compatible](https://img.shields.io/badge/OpenClaw-2026.1.0+-blue.svg)](https://openclaw.dev)
 
@@ -15,7 +15,7 @@ Dojo Genesis transforms OpenClaw into a specification-driven development orchest
 Install the plugin via OpenClaw CLI:
 
 ```bash
-openclaw plugins install @openclaw/dojo-genesis-plugin
+openclaw plugins install @trespies-source/dojo-genesis-plugin
 ```
 
 Add to your `~/.openclaw/openclaw.json`:
