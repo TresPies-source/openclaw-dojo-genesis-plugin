@@ -1,6 +1,6 @@
 {
   "name": "@trespies-source/dojo-genesis-plugin",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Specification-driven development orchestration for OpenClaw",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

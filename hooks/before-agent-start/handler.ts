@@ -1,4 +1,4 @@
-import type { HookHandler } from "../../tests/__mocks__/openclaw-types.js";
+import type { HookHandler } from "openclaw";
 import { stateManager } from "../../src/state/manager.js";
 
 const SKILL_INSTRUCTIONS: Record<string, string> = {

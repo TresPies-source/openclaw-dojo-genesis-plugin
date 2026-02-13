@@ -11,19 +11,26 @@ declare module "openclaw" {
     debug(message: string, ...args: unknown[]): void;
   }
 
+  export interface OpenClawConfig {
+    [key: string]: unknown;
+  }
+
   export interface PluginRuntime {
     state: {
-      resolveStateDir(pluginId: string): string;
+      resolveStateDir(cfg: OpenClawConfig): string;
     };
   }
 
   export interface CommandContext {
     args?: string;
+    channel?: string;
   }
 
   export interface CommandRegistration {
     name: string;
     description: string;
+    acceptsArgs?: boolean;
+    requireAuth?: boolean;
     handler: (ctx: CommandContext) => { text: string } | Promise<{ text: string }>;
   }
 
@@ -40,7 +47,7 @@ declare module "openclaw" {
 
   export interface PluginAPI {
     registerCommand(cmd: CommandRegistration): void;
-    registerTool(tool: ToolRegistration): void;
+    registerTool(tool: ToolRegistration, opts?: { optional?: boolean }): void;
     runtime: PluginRuntime;
     logger: PluginLogger;
   }
@@ -53,6 +60,9 @@ declare module "openclaw" {
   }
 
   export type HookHandler = (event: HookEvent) => Promise<void> | void;
+}
 
+declare module "openclaw/plugin-sdk" {
+  import type { PluginAPI } from "openclaw";
   export function registerPluginHooksFromDir(api: PluginAPI, dir: string): void;
 }

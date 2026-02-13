@@ -1,4 +1,4 @@
-import type { PluginAPI } from "../../tests/__mocks__/openclaw-types.js";
+import type { PluginAPI } from "openclaw";
 import { handleInit } from "./init.js";
 import { handleSwitch } from "./switch.js";
 import { handleStatus } from "./status.js";

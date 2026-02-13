@@ -1,5 +1,5 @@
 import type { PluginAPI } from "openclaw";
-import { registerPluginHooksFromDir } from "openclaw";
+import { registerPluginHooksFromDir } from "openclaw/plugin-sdk";
 import { registerDojoCommands } from "./src/commands/router.js";
 import { registerOrchestrationTools } from "./src/orchestration/tool-registry.js";
 import { initStateManager } from "./src/state/manager.js";
@@ -24,9 +24,9 @@ export default {
   register(api: PluginAPI) {
     let stateDir: string;
     try {
-      stateDir = api.runtime.state.resolveStateDir("dojo-genesis-plugin");
+      stateDir = api.runtime.state.resolveStateDir({ projectsDir: "dojo-genesis-plugin" });
     } catch {
-      stateDir = join(homedir(), ".openclaw");
+      stateDir = join(homedir(), ".openclaw", "dojo-genesis-plugin");
     }
 
     initStateManager(stateDir);
