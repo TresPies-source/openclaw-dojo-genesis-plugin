@@ -1,0 +1,44 @@
+{
+  "name": "ClawHubPluginsByDojoGenesis",
+  "owner": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "metadata": {
+    "description": "Build profitable skills and services for the OpenClaw ecosystem. 6 plugins covering skill development, API integration, security, automation, deployment, and monetization. From zero to ClawHub in 30 minutes.",
+    "version": "0.1.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "skill-builder",
+      "source": "./plugins/skill-builder",
+      "description": "Build high-quality ClawHub skills that solve real problems. Follows the SKILL.md spec, includes testing workflows, and guides you from idea to published skill in under 30 minutes."
+    },
+    {
+      "name": "api-integration",
+      "source": "./plugins/api-integration",
+      "description": "Connect OpenClaw to any API. Pattern library for REST, GraphQL, webhooks, and authentication flows. Turn API documentation into working skills with security best practices built in."
+    },
+    {
+      "name": "security-guard",
+      "source": "./plugins/security-guard",
+      "description": "Protect users and build trust. Audit skills for security vulnerabilities, implement safe credential handling, sandbox untrusted code, and navigate the post-ClawHavoc security landscape."
+    },
+    {
+      "name": "automation-factory",
+      "source": "./plugins/automation-factory",
+      "description": "Build and sell profitable automations. Templates for SMB workflows, pricing strategies, packaging multi-skill solutions, and turning one-off automations into recurring revenue."
+    },
+    {
+      "name": "setup-services",
+      "source": "./plugins/setup-services",
+      "description": "Deploy OpenClaw installations professionally. Checklists for Docker configuration, messaging platform integration, security hardening, and troubleshooting. Turn setup complexity into service revenue."
+    },
+    {
+      "name": "monetization-toolkit",
+      "source": "./plugins/monetization-toolkit",
+      "description": "Every revenue model for ClawHub developers. Freemium skill strategies, marketplace positioning, pricing psychology, and distribution channels. Make money while you sleep."
+    }
+  ]
+}
