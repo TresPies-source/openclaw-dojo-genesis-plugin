@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-planning-with-files",
+  "version": "1.0.0",
+  "description": "Route file-based planning to specialized modes",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "workflow", "process"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

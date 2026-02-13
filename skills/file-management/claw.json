@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-file-management",
+  "version": "1.0.0",
+  "description": "Organize files and directories flexibly",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "tools", "strategy"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

@@ -107,7 +107,7 @@ describe("E2E full workflow", () => {
 
   it("complete 6-phase workflow: init → scout → spec → tracks → commission → retro", async () => {
     const projectName = "my-app";
-    const basePath = `${tmpDir}/dojo-genesis/projects/${projectName}`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/${projectName}`;
 
     const initResult = await handleInit([projectName, "--desc", "Mobile redesign project"]);
     expect(initResult.text).toContain(`**Project created:** \`${projectName}\``);
@@ -243,7 +243,7 @@ describe("E2E full workflow", () => {
     expect(stateJson.pendingAction).toBeNull();
 
     const globalJson = JSON.parse(
-      await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8"),
+      await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8"),
     );
     expect(globalJson.activeProjectId).toBe(projectName);
     expect(globalJson.projects).toHaveLength(1);
@@ -251,8 +251,8 @@ describe("E2E full workflow", () => {
   });
 
   it("multi-project isolation", async () => {
-    const basePathA = `${tmpDir}/dojo-genesis/projects/alpha`;
-    const basePathB = `${tmpDir}/dojo-genesis/projects/bravo`;
+    const basePathA = `${tmpDir}/dojo-genesis-plugin/projects/alpha`;
+    const basePathB = `${tmpDir}/dojo-genesis-plugin/projects/bravo`;
 
     await handleInit(["alpha", "--desc", "Project Alpha"]);
     await handleInit(["bravo", "--desc", "Project Bravo"]);
@@ -363,7 +363,7 @@ describe("E2E full workflow", () => {
 
   it("PROJECT.md is updated on phase transitions", async () => {
     await handleInit(["test-proj"]);
-    const basePath = `${tmpDir}/dojo-genesis/projects/test-proj`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/test-proj`;
 
     let projectMd = await fs.readFile(`${basePath}/PROJECT.md`, "utf-8");
     expect(projectMd).toContain("**Phase:** initialized");
@@ -380,7 +380,7 @@ describe("E2E full workflow", () => {
 
   it("archive removes project from active list but preserves files", async () => {
     await handleInit(["to-archive"]);
-    const basePath = `${tmpDir}/dojo-genesis/projects/to-archive`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/to-archive`;
 
     await simulateSkillExecution("scout", ["some tension"], {
       outputDir: "scouts",

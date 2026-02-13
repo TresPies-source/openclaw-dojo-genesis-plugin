@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-skill-audit-upgrade",
+  "version": "1.0.0",
+  "description": "Audit and upgrade skills to quality standards",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "forge", "skills"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

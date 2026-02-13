@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-seed-to-skill-converter",
+  "version": "1.0.0",
+  "description": "Elevate proven seeds into full skills",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "garden", "memory"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

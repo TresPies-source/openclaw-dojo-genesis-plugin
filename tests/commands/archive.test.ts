@@ -29,7 +29,7 @@ describe("handleArchive", () => {
     await handleInit(["my-app"]);
     await handleArchive(["my-app"]);
 
-    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const global = JSON.parse(globalRaw);
     expect(global.projects[0].archived).toBe(true);
   });
@@ -38,7 +38,7 @@ describe("handleArchive", () => {
     await handleInit(["my-app"]);
     await handleArchive(["my-app"]);
 
-    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const global = JSON.parse(globalRaw);
     expect(global.activeProjectId).toBeNull();
   });
@@ -48,14 +48,14 @@ describe("handleArchive", () => {
     await handleInit(["project-b"]);
     await handleArchive(["project-a"]);
 
-    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const global = JSON.parse(globalRaw);
     expect(global.activeProjectId).toBe("project-b");
   });
 
   it("preserves project files on disk after archiving", async () => {
     await handleInit(["my-app"]);
-    const basePath = `${tmpDir}/dojo-genesis/projects/my-app`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/my-app`;
     await handleArchive(["my-app"]);
 
     const stat = await fs.stat(basePath);

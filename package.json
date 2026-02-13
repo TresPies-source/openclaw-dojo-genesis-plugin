@@ -1,9 +1,22 @@
 {
-  "name": "@openclaw/dojo-genesis",
+  "name": "@openclaw/dojo-genesis-plugin",
   "version": "1.0.0",
   "description": "Specification-driven development orchestration for OpenClaw",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "skills/",
+    "hooks/",
+    "openclaw.plugin.json",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "openclaw": {
     "extensions": "index.ts"
   },
@@ -17,12 +30,23 @@
   "keywords": [
     "openclaw",
     "plugin",
-    "dojo",
+    "dojo-genesis",
     "orchestration",
-    "specification"
+    "specification",
+    "development",
+    "skills",
+    "clawhub"
   ],
-  "author": "OpenClaw",
+  "author": "Tres Pies Design <cruz@trespiesdesign.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TresPies-source/openclaw-dojo-genesis-plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/TresPies-source/openclaw-dojo-genesis-plugin/issues"
+  },
+  "homepage": "https://github.com/TresPies-source/openclaw-dojo-genesis-plugin#readme",
   "peerDependencies": {
     "openclaw": "*"
   },

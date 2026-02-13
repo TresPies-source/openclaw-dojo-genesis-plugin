@@ -33,7 +33,7 @@ describe("handleSwitch", () => {
 
     await handleSwitch(["project-a"]);
 
-    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const global = JSON.parse(globalRaw);
     expect(global.activeProjectId).toBe("project-a");
   });
@@ -42,14 +42,14 @@ describe("handleSwitch", () => {
     await handleInit(["project-a"]);
     await handleInit(["project-b"]);
 
-    const beforeRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const beforeRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const beforeGlobal = JSON.parse(beforeRaw);
     const beforeAccess = beforeGlobal.projects.find((p: { id: string }) => p.id === "project-a").lastAccessedAt;
 
     await new Promise((r) => setTimeout(r, 10));
     await handleSwitch(["project-a"]);
 
-    const afterRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const afterRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const afterGlobal = JSON.parse(afterRaw);
     const afterAccess = afterGlobal.projects.find((p: { id: string }) => p.id === "project-a").lastAccessedAt;
 

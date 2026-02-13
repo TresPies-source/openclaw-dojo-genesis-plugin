@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-frontend-from-backend",
+  "version": "1.0.0",
+  "description": "Write frontend specs from backend architecture",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "workflow", "process"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

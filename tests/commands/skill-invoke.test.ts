@@ -22,7 +22,7 @@ describe("handleSkillInvoke", () => {
 
     await handleSkillInvoke("strategic-scout", ["native", "vs", "PWA"]);
 
-    const raw = await fs.readFile(`${tmpDir}/dojo-genesis/projects/my-app/state.json`, "utf-8");
+    const raw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/my-app/state.json`, "utf-8");
     const state = JSON.parse(raw);
     expect(state.pendingAction).not.toBeNull();
     expect(state.pendingAction.skill).toBe("strategic-scout");
@@ -44,7 +44,7 @@ describe("handleSkillInvoke", () => {
 
     await handleSkillInvoke("release-specification", ["mobile-redesign"]);
 
-    const raw = await fs.readFile(`${tmpDir}/dojo-genesis/projects/my-app/state.json`, "utf-8");
+    const raw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/my-app/state.json`, "utf-8");
     const state = JSON.parse(raw);
     const entry = state.activityLog.find(
       (e: { action: string }) => e.action === "command:release-specification",
@@ -59,12 +59,12 @@ describe("handleSkillInvoke", () => {
 
     await handleSkillInvoke("parallel-tracks", ["@project-a"]);
 
-    const rawA = await fs.readFile(`${tmpDir}/dojo-genesis/projects/project-a/state.json`, "utf-8");
+    const rawA = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/project-a/state.json`, "utf-8");
     const stateA = JSON.parse(rawA);
     expect(stateA.pendingAction).not.toBeNull();
     expect(stateA.pendingAction.skill).toBe("parallel-tracks");
 
-    const rawB = await fs.readFile(`${tmpDir}/dojo-genesis/projects/project-b/state.json`, "utf-8");
+    const rawB = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/project-b/state.json`, "utf-8");
     const stateB = JSON.parse(rawB);
     expect(stateB.pendingAction).toBeNull();
   });
@@ -74,7 +74,7 @@ describe("handleSkillInvoke", () => {
 
     await handleSkillInvoke("strategic-scout", ["@project-a", "some", "tension"]);
 
-    const raw = await fs.readFile(`${tmpDir}/dojo-genesis/projects/project-a/state.json`, "utf-8");
+    const raw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/project-a/state.json`, "utf-8");
     const state = JSON.parse(raw);
     expect(state.pendingAction.args).toBe("some tension");
   });
@@ -85,7 +85,7 @@ describe("handleSkillInvoke", () => {
     const result = await handleSkillInvoke("parallel-tracks", []);
     expect(result.text).toContain("**Starting parallel-tracks**");
 
-    const raw = await fs.readFile(`${tmpDir}/dojo-genesis/projects/my-app/state.json`, "utf-8");
+    const raw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/my-app/state.json`, "utf-8");
     const state = JSON.parse(raw);
     expect(state.pendingAction.args).toBe("");
   });

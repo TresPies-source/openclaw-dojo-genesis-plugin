@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-memory-garden",
+  "version": "1.0.0",
+  "description": "Write structured memory entries for context management",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "garden", "memory"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

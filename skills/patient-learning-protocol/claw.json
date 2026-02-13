@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-patient-learning-protocol",
+  "version": "1.0.0",
+  "description": "Learn at the pace of understanding",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "tools", "strategy"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

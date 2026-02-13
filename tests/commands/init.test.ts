@@ -25,7 +25,7 @@ describe("handleInit", () => {
 
   it("creates all required directories", async () => {
     await handleInit(["my-app"]);
-    const basePath = `${tmpDir}/dojo-genesis/projects/my-app`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/my-app`;
 
     const dirs = ["scouts", "specs", "prompts", "retros", "tracks", "artifacts"];
     for (const dir of dirs) {
@@ -36,7 +36,7 @@ describe("handleInit", () => {
 
   it("creates PROJECT.md with correct content", async () => {
     await handleInit(["my-app"]);
-    const basePath = `${tmpDir}/dojo-genesis/projects/my-app`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/my-app`;
 
     const content = await fs.readFile(`${basePath}/PROJECT.md`, "utf-8");
     expect(content).toContain("# my-app");
@@ -47,7 +47,7 @@ describe("handleInit", () => {
 
   it("creates PROJECT.md with description when provided", async () => {
     await handleInit(["my-app", "--desc", "A mobile redesign project"]);
-    const basePath = `${tmpDir}/dojo-genesis/projects/my-app`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/my-app`;
 
     const content = await fs.readFile(`${basePath}/PROJECT.md`, "utf-8");
     expect(content).toContain("A mobile redesign project");
@@ -55,7 +55,7 @@ describe("handleInit", () => {
 
   it("creates decisions.md", async () => {
     await handleInit(["my-app"]);
-    const basePath = `${tmpDir}/dojo-genesis/projects/my-app`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/my-app`;
 
     const content = await fs.readFile(`${basePath}/decisions.md`, "utf-8");
     expect(content).toContain("# Decision Log: my-app");
@@ -63,7 +63,7 @@ describe("handleInit", () => {
 
   it("persists project state to state.json", async () => {
     await handleInit(["my-app"]);
-    const basePath = `${tmpDir}/dojo-genesis/projects/my-app`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin/projects/my-app`;
 
     const raw = await fs.readFile(`${basePath}/state.json`, "utf-8");
     const state = JSON.parse(raw);
@@ -75,7 +75,7 @@ describe("handleInit", () => {
 
   it("sets the project as active in global state", async () => {
     await handleInit(["my-app"]);
-    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const global = JSON.parse(globalRaw);
     expect(global.activeProjectId).toBe("my-app");
     expect(global.projects).toHaveLength(1);
@@ -84,14 +84,14 @@ describe("handleInit", () => {
 
   it("parses --desc flag with multiple words", async () => {
     await handleInit(["my-app", "--desc", "This", "is", "a", "description"]);
-    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const global = JSON.parse(globalRaw);
     expect(global.projects[0].description).toBe("This is a description");
   });
 
   it("strips quotes from --desc value", async () => {
     await handleInit(["my-app", "--desc", '"Quoted description"']);
-    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+    const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
     const global = JSON.parse(globalRaw);
     expect(global.projects[0].description).toBe("Quoted description");
   });

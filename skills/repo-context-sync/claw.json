@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-repo-context-sync",
+  "version": "1.0.0",
+  "description": "Sync and extract context from repositories",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "research", "analysis"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

@@ -7,7 +7,7 @@ import { homedir } from "os";
 import { join } from "path";
 
 export default {
-  id: "dojo-genesis",
+  id: "dojo-genesis-plugin",
   name: "Dojo Genesis",
 
   configSchema: {
@@ -15,7 +15,7 @@ export default {
     properties: {
       projectsDir: {
         type: "string" as const,
-        default: "dojo-genesis",
+        default: "dojo-genesis-plugin",
         description: "State directory name under OpenClaw config",
       },
     },
@@ -24,7 +24,7 @@ export default {
   register(api: PluginAPI) {
     let stateDir: string;
     try {
-      stateDir = api.runtime.state.resolveStateDir("dojo-genesis");
+      stateDir = api.runtime.state.resolveStateDir("dojo-genesis-plugin");
     } catch {
       stateDir = join(homedir(), ".openclaw");
     }

@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-status-template",
+  "version": "1.0.0",
+  "description": "Write status docs using 10-section template",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "system", "health"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

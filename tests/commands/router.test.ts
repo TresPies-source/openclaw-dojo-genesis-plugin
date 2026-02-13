@@ -125,7 +125,7 @@ describe("registerDojoCommands", () => {
       await invoke("init my-app");
       await invoke("scout some tension");
 
-      const raw = await fs.readFile(`${tmpDir}/dojo-genesis/projects/my-app/state.json`, "utf-8");
+      const raw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/my-app/state.json`, "utf-8");
       const state = JSON.parse(raw);
       expect(state.pendingAction).not.toBeNull();
       expect(state.pendingAction.skill).toBe("strategic-scout");
@@ -138,7 +138,7 @@ describe("registerDojoCommands", () => {
       const result = await invoke("init my-app --desc A description");
       expect(result.text).toContain("**Project created:** `my-app`");
 
-      const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis/global-state.json`, "utf-8");
+      const globalRaw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/global-state.json`, "utf-8");
       const global = JSON.parse(globalRaw);
       expect(global.projects[0].description).toBe("A description");
     });

@@ -1,11 +1,27 @@
+# OS
 .DS_Store
+
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Test
+coverage/
+
+# IDE
+.vscode/
+
+# Environment
+.env
+
+# Zenflow (task runner state)
+.zenflow/
+
+# Misc
 *.skill
 __pycache__/
 *.pyc
-.env
-.vscode/
-node_modules/
-dist/
-coverage/
 *.tmp
 *.log

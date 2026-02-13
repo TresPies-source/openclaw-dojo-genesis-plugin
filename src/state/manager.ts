@@ -11,7 +11,7 @@ export class DojoStateManager {
   private projectCache: Map<string, ProjectState> = new Map();
 
   constructor(configDir: string) {
-    this.basePath = `${configDir}/dojo-genesis`;
+    this.basePath = `${configDir}/dojo-genesis-plugin`;
   }
 
   getBasePath(): string {

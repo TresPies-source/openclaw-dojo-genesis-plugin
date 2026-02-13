@@ -1,0 +1,19 @@
+{
+  "id": "dojo-genesis-plugin",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "projectsDir": {
+        "type": "string",
+        "default": "dojo-genesis-plugin"
+      }
+    }
+  },
+  "uiHints": {
+    "projectsDir": {
+      "label": "Projects Directory",
+      "placeholder": "dojo-genesis-plugin"
+    }
+  }
+}

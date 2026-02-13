@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-parallel-tracks",
+  "version": "1.0.0",
+  "description": "Decompose specs into independent parallel tracks",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "pipeline", "development"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

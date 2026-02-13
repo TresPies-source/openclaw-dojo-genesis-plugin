@@ -126,7 +126,7 @@ describe("registerOrchestrationTools", () => {
       expect(data.saved).toBe(true);
       expect(data.path).toBe("scouts/2026-02-12_scout_native-md");
 
-      const basePath = `${tmpDir}/dojo-genesis/projects/my-app/scouts`;
+      const basePath = `${tmpDir}/dojo-genesis-plugin/projects/my-app/scouts`;
       const content = await fs.readFile(`${basePath}/2026-02-12_scout_native-md`, "utf-8");
       expect(content).toBe("# Scout Output\n\nSome content");
     });
@@ -225,7 +225,7 @@ describe("registerOrchestrationTools", () => {
         projectId: "project-a",
       });
 
-      const basePath = `${tmpDir}/dojo-genesis/projects/project-a/scouts`;
+      const basePath = `${tmpDir}/dojo-genesis-plugin/projects/project-a/scouts`;
       const content = await fs.readFile(`${basePath}/output-md`, "utf-8");
       expect(content).toBe("targeted content");
     });

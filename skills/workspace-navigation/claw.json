@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-workspace-navigation",
+  "version": "1.0.0",
+  "description": "Navigate shared agent workspaces",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "agents", "coordination"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

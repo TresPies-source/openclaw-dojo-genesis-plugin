@@ -67,7 +67,7 @@ describe("Command integration", () => {
     await handleInit(["test-project"]);
     await handleInit(["project-b"]);
 
-    const basePath = `${tmpDir}/dojo-genesis`;
+    const basePath = `${tmpDir}/dojo-genesis-plugin`;
 
     const globalRaw = await fs.readFile(`${basePath}/global-state.json`, "utf-8");
     const global = JSON.parse(globalRaw);
@@ -126,13 +126,13 @@ describe("Command integration", () => {
     expect(result.text).toContain("**Starting strategic-scout**");
     expect(result.text).toContain("`project-a`");
 
-    const rawA = await fs.readFile(`${tmpDir}/dojo-genesis/projects/project-a/state.json`, "utf-8");
+    const rawA = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/project-a/state.json`, "utf-8");
     const stateA = JSON.parse(rawA);
     expect(stateA.pendingAction).not.toBeNull();
     expect(stateA.pendingAction.skill).toBe("strategic-scout");
     expect(stateA.pendingAction.args).toBe("native vs PWA");
 
-    const rawB = await fs.readFile(`${tmpDir}/dojo-genesis/projects/project-b/state.json`, "utf-8");
+    const rawB = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/project-b/state.json`, "utf-8");
     const stateB = JSON.parse(rawB);
     expect(stateB.pendingAction).toBeNull();
   });
@@ -143,7 +143,7 @@ describe("Command integration", () => {
     const result = await handleSkillInvoke("release-specification", ["mobile-redesign"]);
     expect(result.text).toContain("`my-app`");
 
-    const raw = await fs.readFile(`${tmpDir}/dojo-genesis/projects/my-app/state.json`, "utf-8");
+    const raw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/my-app/state.json`, "utf-8");
     const state = JSON.parse(raw);
     expect(state.pendingAction.skill).toBe("release-specification");
     expect(state.pendingAction.args).toBe("mobile-redesign");
@@ -157,7 +157,7 @@ describe("Command integration", () => {
     const result = await handleSkillInvoke("retrospective", []);
     expect(result.text).toContain("`project-a`");
 
-    const raw = await fs.readFile(`${tmpDir}/dojo-genesis/projects/project-a/state.json`, "utf-8");
+    const raw = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/project-a/state.json`, "utf-8");
     const state = JSON.parse(raw);
     expect(state.pendingAction.skill).toBe("retrospective");
   });
@@ -177,12 +177,12 @@ describe("Command integration", () => {
     await handleInit(["bravo"]);
     await handleSkillInvoke("release-specification", ["feature-b"]);
 
-    const rawAlpha = await fs.readFile(`${tmpDir}/dojo-genesis/projects/alpha/state.json`, "utf-8");
+    const rawAlpha = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/alpha/state.json`, "utf-8");
     const stateAlpha = JSON.parse(rawAlpha);
     expect(stateAlpha.pendingAction.skill).toBe("strategic-scout");
     expect(stateAlpha.pendingAction.args).toBe("tension-a");
 
-    const rawBravo = await fs.readFile(`${tmpDir}/dojo-genesis/projects/bravo/state.json`, "utf-8");
+    const rawBravo = await fs.readFile(`${tmpDir}/dojo-genesis-plugin/projects/bravo/state.json`, "utf-8");
     const stateBravo = JSON.parse(rawBravo);
     expect(stateBravo.pendingAction.skill).toBe("release-specification");
     expect(stateBravo.pendingAction.args).toBe("feature-b");

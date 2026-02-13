@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-retrospective",
+  "version": "1.0.0",
+  "description": "Reflect on what went well, what was hard, what to improve",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "pipeline", "development"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

@@ -41,7 +41,7 @@ describe("before-agent-start hook", () => {
     expect(ctx).toContain("Phase: initialized");
     expect(ctx).toContain("Pending skill: strategic-scout");
     expect(ctx).toContain("User request: native vs PWA");
-    expect(ctx).toContain("INSTRUCTIONS: Run the strategic-scout skill.");
+    expect(ctx).toContain("INSTRUCTIONS: Run the strategic-scout skill");
     expect(ctx).toContain("dojo_get_context");
     expect(ctx).toContain("dojo_save_artifact");
     expect(ctx).toContain("dojo_update_state");

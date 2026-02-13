@@ -38,7 +38,7 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 │    │        └─────────────────────┘                          │
 │    │                                                         │
 │    │  ┌──────────────────────────────────────────────────┐  │
-│    │  │ Plugin: @openclaw/dojo-genesis                    │  │
+│    │  │ Plugin: @openclaw/dojo-genesis-plugin                    │  │
 │    │  │                                                   │  │
 │    │  │  register(api) {                                  │  │
 │    │  │    api.registerCommand("dojo", handler)           │  │
@@ -50,7 +50,7 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 │    │  │    dojo_save_artifact → saves to project dir      │  │
 │    │  │    dojo_update_state → updates state.json         │  │
 │    │  │                                                   │  │
-│    │  │  State: ~/.openclaw/dojo-genesis/                 │  │
+│    │  │  State: ~/.openclaw/dojo-genesis-plugin/                 │  │
 │    │  └──────────────────────────────────────────────────┘  │
 │    │                                                         │
 │  Channels: WhatsApp │ Telegram │ Slack │ Discord │ WebChat   │
@@ -70,7 +70,7 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 ### What We Build
 
 - `/dojo` command handler (auto-reply commands for project management)
-- Project state management (file-based in `~/.openclaw/dojo-genesis/`)
+- Project state management (file-based in `~/.openclaw/dojo-genesis-plugin/`)
 - Orchestration tools (`dojo_get_context`, `dojo_save_artifact`, `dojo_update_state`)
 - SKILL.md enhancements for project-awareness (orchestration instructions)
 - Plugin hooks for skill execution lifecycle
@@ -83,7 +83,7 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 ### Directory Layout
 
 ```
-@openclaw/dojo-genesis/
+@openclaw/dojo-genesis-plugin/
 ├── package.json                    # Plugin manifest with openclaw.extensions
 ├── index.ts                        # Plugin entry: register(api) function
 ├── src/
@@ -107,11 +107,14 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 │       ├── validation.ts           # Input sanitization
 │       └── file-ops.ts             # Safe file operations
 ├── hooks/
-│   ├── on-skill-complete/
-│   │   ├── HOOK.md
+│   ├── before-agent-start/          # Injects project context into agent system prompt
+│   │   ├── HOOK.md                  # events: ["before_agent_start"]
 │   │   └── handler.ts
-│   └── on-project-phase-change/
-│       ├── HOOK.md
+│   ├── after-tool-call/             # Monitors orchestration tool usage
+│   │   ├── HOOK.md                  # events: ["after_tool_call"]
+│   │   └── handler.ts
+│   └── agent-end/                   # Clears pendingAction after agent turn
+│       ├── HOOK.md                  # events: ["agent_end"]
 │       └── handler.ts
 ├── skills/                         # 44 bundled SKILL.md files
 │   ├── strategic-scout/
@@ -130,11 +133,11 @@ Dojo Genesis integrates with OpenClaw as a TypeScript plugin registered through 
 
 ```json
 {
-  "name": "@openclaw/dojo-genesis",
+  "name": "@openclaw/dojo-genesis-plugin",
   "version": "0.1.0",
   "description": "Specification-driven development orchestration for OpenClaw. 44 behavioral skills organized into 7 categories: STRATEGIZE, SPECIFY, REMEMBER, OBSERVE, LEARN, ORCHESTRATE, BUILD.",
   "openclaw.extensions": "index.ts",
-  "keywords": ["dojo-genesis", "specification", "orchestration", "development", "workflow"],
+  "keywords": ["dojo-genesis-plugin", "specification", "orchestration", "development", "workflow"],
   "peerDependencies": {
     "openclaw": "*"
   },
@@ -154,7 +157,7 @@ import { registerOrchestrationTools } from "./src/orchestration/context-provider
 import { registerPluginHooksFromDir } from "openclaw/plugin-sdk";
 
 export default {
-  id: "dojo-genesis",
+  id: "dojo-genesis-plugin",
   name: "Dojo Genesis",
   slotType: "tool",
 
@@ -163,7 +166,7 @@ export default {
     properties: {
       projectsDir: {
         type: "string",
-        default: "dojo-genesis/projects",
+        default: "dojo-genesis-plugin/projects",
         description: "Directory for project state (relative to ~/.openclaw/)"
       }
     }
@@ -246,12 +249,12 @@ export function registerDojoCommands(api: PluginAPI) {
         case "tracks":
         case "commission":
         case "retro":
-          // Set project context, then continue to agent for skill execution
+          // Write pendingAction to state; before_agent_start hook injects context
           const project = resolveTargetProject(ctx);
-          return {
-            shouldContinue: true,
-            updatedCtx: { dojoProject: project.projectId, dojoPhase: project.phase }
-          };
+          await stateManager.updateProjectState(project.projectId, {
+            pendingAction: { skill: SKILL_MAP[subcommand], args: ctx.args.slice(1).join(" "), requestedAt: new Date().toISOString() }
+          });
+          return { text: `Starting ${SKILL_MAP[subcommand]} for project ${project.projectId}...` };
         default:
           return { text: "Unknown command. Try: init, switch, status, list, scout, spec, tracks, commission, retro" };
       }
@@ -264,7 +267,7 @@ export function registerDojoCommands(api: PluginAPI) {
 
 ## V. State Management
 
-### Global State (`~/.openclaw/dojo-genesis/global-state.json`)
+### Global State (`~/.openclaw/dojo-genesis-plugin/global-state.json`)
 
 ```typescript
 interface GlobalState {
@@ -284,7 +287,7 @@ interface ProjectMetadata {
 }
 ```
 
-### Per-Project State (`~/.openclaw/dojo-genesis/projects/<name>/state.json`)
+### Per-Project State (`~/.openclaw/dojo-genesis-plugin/projects/<name>/state.json`)
 
 ```typescript
 interface ProjectState {
@@ -311,7 +314,7 @@ type DojoPhase =
 ### File System Layout
 
 ```
-~/.openclaw/dojo-genesis/
+~/.openclaw/dojo-genesis-plugin/
 ├── global-state.json
 └── projects/
     ├── mobile-redesign/
@@ -520,52 +523,51 @@ Each `/dojo` command advances the project through phases:
 
 ## IX. Plugin Hooks
 
-### Skill Completion Hook
+> **SDK Correction (2026-02-12):** Hook event names verified against actual OpenClaw source via Context7 MCP. Previous version used fabricated event names (`on-skill-complete`, `on-phase-change`). Real OpenClaw lifecycle events documented in `docs/concepts/agent-loop.md`.
 
-Fires after any Dojo Genesis skill completes in orchestration mode:
+Three hooks using real OpenClaw lifecycle event names, registered via `registerPluginHooksFromDir(api, "./hooks")`:
 
-```
-hooks/on-skill-complete/
-├── HOOK.md
-└── handler.ts
+### Hook 1: `before_agent_start` — Context Injection
+
+The critical bridge between commands and the agent. Detects `pendingAction` in state and injects project context into the agent's system prompt.
+
+```yaml
+# hooks/before-agent-start/HOOK.md
+metadata: { "openclaw": { "events": ["before_agent_start"] } }
 ```
 
 ```typescript
-// handler.ts
-export default async function onSkillComplete(event: SkillCompleteEvent) {
-  const { skillName, result, projectContext } = event;
+// hooks/before-agent-start/handler.ts
+const handler: HookHandler = async (event) => {
+  if (event.type !== "agent" || event.action !== "start") return;
+  const state = await stateManager.getProjectState();
+  if (!state?.pendingAction) return;
 
-  if (!projectContext) return; // Standalone mode, no action
-
-  // Save artifact to project directory
-  await saveArtifact(projectContext, skillName, result);
-
-  // Update project state
-  await updateProjectState(projectContext, skillName);
-
-  // Log activity
-  console.log(`[dojo-genesis] ${skillName} completed for project ${projectContext.projectId}`);
-}
+  // Inject project context + skill instructions into event.messages
+  event.messages.push(buildContextBlock(state));
+};
 ```
 
-### Phase Change Hook
+### Hook 2: `after_tool_call` — Tool Usage Monitoring
 
-Fires when a project transitions between phases:
+Monitors orchestration tool calls. When `dojo_update_state` advances the phase, updates PROJECT.md.
 
-```typescript
-export default async function onPhaseChange(event: PhaseChangeEvent) {
-  const { projectId, fromPhase, toPhase } = event;
-
-  // Update PROJECT.md with new phase information
-  await updateProjectMd(projectId, toPhase);
-
-  // Suggest next action based on workflow
-  const nextAction = getNextSuggestedAction(toPhase);
-  if (nextAction) {
-    return { suggestion: nextAction };
-  }
-}
+```yaml
+# hooks/after-tool-call/HOOK.md
+metadata: { "openclaw": { "events": ["after_tool_call"] } }
 ```
+
+### Hook 3: `agent_end` — Cleanup
+
+Clears `pendingAction` from state after agent turn completes, preventing re-triggering.
+
+```yaml
+# hooks/agent-end/HOOK.md
+metadata: { "openclaw": { "events": ["agent_end"] } }
+```
+
+**Available OpenClaw hook events (for reference):**
+`before_agent_start`, `agent_end`, `before_tool_call`, `after_tool_call`, `message_received`, `message_sending`, `message_sent`, `session_start`, `session_end`, `gateway_start`, `gateway_stop`, `before_compaction`, `after_compaction`, `tool_result_persist`, `agent:bootstrap`
 
 ---
 
@@ -621,10 +623,10 @@ Users install the plugin via:
 
 ```bash
 # Install plugin
-openclaw plugins install @openclaw/dojo-genesis
+openclaw plugins install @openclaw/dojo-genesis-plugin
 
 # Or install individual skills from ClawHub
-npx clawhub@latest install dojo-genesis-strategic-scout
+npx clawhub@latest install dojo-genesis-plugin-strategic-scout
 ```
 
 ### Configuration
@@ -635,10 +637,10 @@ After installation, add to `~/.openclaw/openclaw.json`:
 {
   "plugins": {
     "entries": {
-      "dojo-genesis": {
+      "dojo-genesis-plugin": {
         "enabled": true,
         "config": {
-          "projectsDir": "dojo-genesis/projects"
+          "projectsDir": "dojo-genesis-plugin/projects"
         }
       }
     }
@@ -674,7 +676,7 @@ After installation, add to `~/.openclaw/openclaw.json`:
 - [ ] Security audit (ClawHavoc compliance)
 - [ ] Write README and documentation
 - [ ] Publish to ClawHub
-- [ ] Publish plugin to npm as `@openclaw/dojo-genesis`
+- [ ] Publish plugin to npm as `@openclaw/dojo-genesis-plugin`
 
 ---
 
@@ -685,7 +687,7 @@ After installation, add to `~/.openclaw/openclaw.json`:
 | 1 | OpenClaw plugin, not standalone tool | ClawHub distribution to millions of users; leverage existing skill loading, multi-channel routing |
 | 2 | File-based state, not database | Matches OpenClaw's local-first philosophy; portable; human-readable; no additional dependencies |
 | 3 | Hybrid multi-project (active + @override) | Simple for beginners, powerful for multi-project users |
-| 4 | `shouldContinue: false` for management, `shouldContinue: true` + `updatedCtx` for skills | Management commands are deterministic (no AI needed); skill commands pass project context downstream and let the agent handle via `shouldContinue` flag (see Q1 resolution) |
+| 4 | All commands return `{ text: string }`; skill commands use "pending action" pattern + `before_agent_start` hook | SDK only supports `{ text: string }` return. Skill-invoking commands write `pendingAction` to state; `before_agent_start` hook injects project context into agent system prompt. (SDK correction, 2026-02-12) |
 | 5 | SKILL.md orchestration section (not wrapper code) | Skills remain self-contained; orchestration awareness is instructions to the agent, not code changes |
 | 6 | Three orchestration tools (get_context, save_artifact, update_state) | Clean separation; agent decides when to use them based on SKILL.md instructions |
 | 7 | Plugin hooks for lifecycle events | Event-driven; extensible; follows OpenClaw's hook pattern |
@@ -722,7 +724,7 @@ Every `/dojo` command and skill invocation produces well-formatted markdown outp
 Skills produce persistent markdown documents saved via `dojo_save_artifact`.
 
 ```
-~/.openclaw/dojo-genesis/projects/{projectId}/
+~/.openclaw/dojo-genesis-plugin/projects/{projectId}/
 ├── scouts/
 │   └── {date}_{topic}.md
 ├── specs/
@@ -772,27 +774,35 @@ _All 6 original open questions were resolved via iterative scouting (2026-02-12)
 
 ### Q1: Command-to-agent routing for skill-invoking subcommands
 
-**Resolution:** Do not use `{ text: null }`. OpenClaw command handlers return `{ shouldContinue: boolean, reply?: ReplyPayload, updatedCtx?: Partial<MsgContext> }`. For skill-invoking subcommands (`/dojo scout`, `/dojo spec`, etc.), the handler returns `{ shouldContinue: true, updatedCtx: { dojoProject, dojoPhase } }` — this passes project context downstream and lets the agent handle the remaining message. Auto-reply subcommands (`/dojo init`, `/dojo status`, etc.) return `{ shouldContinue: false, reply: { text: "..." } }`.
+> **SDK Correction (2026-02-12):** Original resolution referenced `shouldContinue` + `updatedCtx` pattern from DeepWiki. Verified against actual source via Context7 MCP: command handlers return `{ text: string }` only. The `shouldContinue`/`updatedCtx` pattern does not exist in the real SDK.
 
-**Architectural consequence:** The original "5 auto-reply + 5 agent-routed" split stands, but the mechanism is `shouldContinue` flag, not null routing. Additionally, for skills that have `command-dispatch: tool` + `command-tool` in their SKILL.md frontmatter, OpenClaw can dispatch directly to a registered tool without agent involvement — this provides a third routing option if needed.
+**Resolution (corrected):** All OpenClaw command handlers return `{ text: string }` — the only supported return type. Commands are processed BEFORE the AI agent runs. There is no mechanism for a command to "continue" into an agent turn or inject context directly.
 
-**Sources:** [DeepWiki — Command Reference](https://deepwiki.com/openclaw/openclaw/9.1-command-reference)
+For skill-invoking subcommands (`/dojo scout`, `/dojo spec`, etc.), the handler writes a `pendingAction` to the project state file and returns instructional text. The `before_agent_start` hook (fires before the agent run begins) detects the pending action and injects project context + skill instructions into `event.messages`. Deterministic subcommands (`/dojo init`, `/dojo status`, etc.) return text and the turn ends.
+
+**Architectural consequence:** The "5 deterministic + 5 skill-invoking" split stands. The mechanism is the "pending action" pattern: command writes state → hook reads state → hook injects context. This is a two-step handoff rather than a single-step `shouldContinue` flag.
+
+**Sources:** [Context7 — OpenClaw Source](https://context7.com/openclaw/openclaw), [docs.openclaw.ai/tools/plugin](https://docs.openclaw.ai/tools/plugin)
 
 ### Q2: Project context injection for skill commands
 
-**Resolution:** Use the **tool-pull** pattern as the primary mechanism. The plugin registers `dojo_get_context` via `api.registerTool()`. Each skill's SKILL.md orchestration section instructs the agent to call `dojo_get_context` before proceeding. This is the cleanest approach because the agent explicitly requests what it needs, the tool returns structured JSON, and there is no fragile prompt injection to maintain.
+> **SDK Correction (2026-02-12):** Original supplementary mechanism (`updatedCtx`) does not exist. Replaced with `before_agent_start` hook injection.
 
-**Supplementary mechanism:** The `shouldContinue` + `updatedCtx` pattern (from Q1) can inject lightweight project metadata (project ID, current phase) into the message context that flows to the agent. This gives skills basic awareness without a tool call, while `dojo_get_context` provides full detail when needed.
+**Resolution (corrected):** Use the **tool-pull** pattern as the primary mechanism. The plugin registers `dojo_get_context` via `api.registerTool()`. Each skill's SKILL.md orchestration section instructs the agent to call `dojo_get_context` before proceeding. This is the cleanest approach because the agent explicitly requests what it needs, the tool returns structured JSON, and there is no fragile prompt injection to maintain.
 
-**Decision:** Tool-pull primary, context-push supplementary. Skills use `dojo_get_context` for full state; `updatedCtx` provides minimal ambient context.
+**Supplementary mechanism:** The `before_agent_start` hook (from Q1 correction) can inject project context into `event.messages` when a `pendingAction` exists in state. This gives the agent immediate awareness without waiting for a tool call, while `dojo_get_context` provides full detail when needed.
 
-**Sources:** [DeepWiki — Creating Custom Plugins](https://deepwiki.com/openclaw/openclaw/10.3-creating-custom-plugins)
+**Decision:** Tool-pull primary, hook-push supplementary. Skills use `dojo_get_context` for full state; `before_agent_start` hook provides ambient context when a pending skill action exists.
+
+**Sources:** [Context7 — OpenClaw Source](https://context7.com/openclaw/openclaw), [docs.openclaw.ai/tools/plugin](https://docs.openclaw.ai/tools/plugin)
 
 ### Q3: Plugin-level tool registration
 
-**Resolution:** Confirmed. Plugins register tools via `api.registerTool()`:
+**Resolution:** Confirmed. Plugins register tools via `api.registerTool()` with `@sinclair/typebox` for parameter schemas:
 
 ```typescript
+import { Type } from "@sinclair/typebox";
+
 api.registerTool({
   name: "dojo_get_context",
   description: "Get the current Dojo Genesis project context",
@@ -806,9 +816,9 @@ api.registerTool({
 });
 ```
 
-Tools support `{ optional: true }` for non-critical tools. Visibility is controlled via allowlists: specific tool names, all tools from a plugin ID, or the `"group:plugins"` wildcard. This fully confirms the three-tool architecture (`dojo_get_context`, `dojo_save_artifact`, `dojo_update_state`) as first-class agent tools.
+Tools support `{ optional: true }` for non-critical tools. Visibility is controlled via allowlists in gateway config: specific tool names, all tools from a plugin ID, or the `"group:plugins"` wildcard. This fully confirms the three-tool architecture (`dojo_get_context`, `dojo_save_artifact`, `dojo_update_state`) as first-class agent tools.
 
-**Sources:** [DeepWiki — Creating Custom Plugins](https://deepwiki.com/openclaw/openclaw/10.3-creating-custom-plugins), [DeepWiki — Tools and Skills](https://deepwiki.com/openclaw/openclaw/6-tools-and-skills)
+**Sources:** [Context7 — OpenClaw Source](https://context7.com/openclaw/openclaw), [docs.openclaw.ai/tools/plugin](https://docs.openclaw.ai/tools/plugin)
 
 ### Q4: Skill versioning strategy
 
@@ -828,7 +838,7 @@ Tools support `{ optional: true }` for non-critical tools. Visibility is control
 - **Core:** 8 workflow skills only: strategic-scout, release-specification, parallel-tracks, implementation-prompt, retrospective, context-ingestion, pre-implementation-checklist, handoff-protocol (~320 tokens)
 - **Minimal:** 3 essentials: strategic-scout, release-specification, retrospective (~135 tokens)
 
-Individual skills can be toggled via `plugins.entries.dojo-genesis.skills.<name>.enabled: false`. No custom selective-loading code needed.
+Individual skills can be toggled via `plugins.entries.dojo-genesis-plugin.skills.<name>.enabled: false`. No custom selective-loading code needed.
 
 ### Q6: Hook access to project state
 
@@ -868,13 +878,11 @@ export const stateManager = new DojoStateManager(); // Module-level singleton
 
 - [OpenClaw GitHub Repository](https://github.com/openclaw/openclaw)
 - [OpenClaw Skills Documentation](https://docs.openclaw.ai/tools/skills)
-- [OpenClaw Plugin Documentation](https://docs.openclaw.ai/tools/plugin)
+- [OpenClaw Plugin Documentation](https://docs.openclaw.ai/tools/plugin) — confirms `{ text: string }` command return type
+- [OpenClaw Agent Loop & Hooks](https://docs.openclaw.ai/concepts/agent-loop) — hook lifecycle events
 - [ClawHub Skills Registry](https://github.com/openclaw/clawhub)
-- [Creating Custom Plugins (DeepWiki)](https://deepwiki.com/openclaw/openclaw/10.3-creating-custom-plugins)
-- [Extensions and Plugins (DeepWiki)](https://deepwiki.com/openclaw/openclaw/10-extensions-and-plugins)
-- [Command Reference (DeepWiki)](https://deepwiki.com/openclaw/openclaw/9.1-command-reference) — Q1 resolution source
-- [Tools and Skills (DeepWiki)](https://deepwiki.com/openclaw/openclaw/6-tools-and-skills) — Q3 resolution source
-- [Skills System (DeepWiki)](https://deepwiki.com/openclaw/openclaw/6.3-skills-system) — Q5 resolution source
+- [Context7 — OpenClaw Source](https://context7.com/openclaw/openclaw) — authoritative code examples, used for SDK corrections on 2026-02-12
+- ~~[DeepWiki references]~~ — Removed. DeepWiki (AI-generated) was the original source for Q1-Q3 resolutions but contained fabricated patterns (`shouldContinue`, `updatedCtx`). Replaced with Context7 and official docs.
 - [Dojo Genesis v0.0.19 Specification](dojo-genesis/docs/v0.0.x/v0.0.19/v0.0.19_specification.md)
 - [Dojo Genesis v0.0.20 Specification](dojo-genesis/docs/v0.0.x/v0.0.20/v0.0.20_specification.md)
 - [Strategic Scout: The Agentic Platform](2026-02-12_strategic_scout_agentic_platform.md)

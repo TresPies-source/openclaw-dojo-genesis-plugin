@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-status-writing",
+  "version": "1.0.0",
+  "description": "Write and update STATUS.md files",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "system", "health"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}
