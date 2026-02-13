@@ -18,7 +18,9 @@
     "CHANGELOG.md"
   ],
   "openclaw": {
-    "extensions": "index.ts"
+    "extensions": [
+      "./index.ts"
+    ]
   },
   "scripts": {
     "build": "tsc",
