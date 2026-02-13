@@ -1,5 +1,5 @@
-import type { PluginAPI } from "./tests/__mocks__/openclaw-types.js";
-import { registerPluginHooksFromDir } from "./tests/__mocks__/openclaw-types.js";
+import type { PluginAPI } from "openclaw";
+import { registerPluginHooksFromDir } from "openclaw";
 import { registerDojoCommands } from "./src/commands/router.js";
 import { registerOrchestrationTools } from "./src/orchestration/tool-registry.js";
 import { initStateManager } from "./src/state/manager.js";
