@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-mcp-cloudflare-builder",
+  "version": "1.0.0",
+  "description": "Scaffold production-ready MCP servers on Cloudflare Workers",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "mcp", "cloudflare", "infrastructure"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

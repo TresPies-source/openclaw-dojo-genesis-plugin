@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-workflow-router",
+  "version": "1.0.0",
+  "description": "Route goals to Research, Plan, Build, or Fix agent workflows",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "orchestration", "routing", "agents"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}

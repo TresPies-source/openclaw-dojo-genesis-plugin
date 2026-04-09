@@ -1,0 +1,12 @@
+{
+  "name": "dojo-genesis-plugin-mcp-server-builder",
+  "version": "1.0.0",
+  "description": "Scaffold MCP servers from OpenAPI specs with quality gates",
+  "author": "dojo-genesis",
+  "license": "MIT",
+  "permissions": [],
+  "entry": "SKILL.md",
+  "tags": ["dojo-genesis", "mcp", "openapi", "scaffold"],
+  "models": ["claude-*", "gpt-*", "gemini-*"],
+  "minOpenClawVersion": "2026.1.0"
+}
