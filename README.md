@@ -8,15 +8,17 @@ Specification-driven development orchestration for OpenClaw — turn any channel
 
 ## What It Does
 
-Dojo Genesis transforms OpenClaw into a specification-driven development orchestrator. It treats projects as first-class entities with explicit phases, parallel tracks, decision logs, and artifact management. The plugin bundles 40 behavioral skills across 8 categories, enabling strategic scouting, release specification, parallel track decomposition, implementation commissioning, and structured retrospectives. It works seamlessly on every OpenClaw channel — WhatsApp, Telegram, Slack, Discord, WebChat — bringing development discipline to wherever your team communicates.
+Dojo Genesis transforms OpenClaw into a specification-driven development orchestrator. It treats projects as first-class entities with explicit phases, parallel tracks, decision logs, and artifact management. The plugin bundles 84 first-party skills across 8 categories, enabling strategic scouting, release specification, parallel track decomposition, implementation commissioning, and structured retrospectives. It works seamlessly on every OpenClaw channel — WhatsApp, Telegram, Slack, Discord, WebChat — bringing development discipline to wherever your team communicates.
 
 ## Quick Start
 
-Install the plugin via OpenClaw CLI:
+### 1. Install
 
 ```bash
 openclaw plugins install @trespies-source/dojo-genesis-plugin
 ```
+
+### 2. Enable
 
 Add to your `~/.openclaw/openclaw.json`:
 
@@ -32,10 +34,37 @@ Add to your `~/.openclaw/openclaw.json`:
 }
 ```
 
-Restart the gateway:
+### 3. Restart and verify
 
 ```bash
 openclaw restart
+openclaw plugins list   # confirm dojo-genesis-plugin is active
+```
+
+### 4. Create your first project
+
+```
+/dojo init my-project
+```
+
+Done. You now have a project with scouts/, specs/, commissions/, and retros/ directories ready to receive artifacts.
+
+## Example Workflow
+
+```
+/dojo init api-redesign
+/dojo scout "Should we rebuild the API or iterate on v2?"
+   → 3 scouted routes saved to scouts/
+/dojo spec
+   → Production-ready specification saved to specs/
+/dojo tracks
+   → Spec decomposed into parallel implementation tracks
+/dojo commission
+   → Structured prompts ready for autonomous agents
+/dojo status
+   → Pipeline: Explore ✅ → Decide ✅ → Execute ✅ → Learn ⏳
+/dojo retro
+   → Retrospective + extracted seeds for next time
 ```
 
 ## Commands
@@ -78,6 +107,7 @@ Process integration and execution skills:
 - `frontend-from-backend` — Write frontend specs from backend architecture
 - `spec-constellation-to-prompt-suite` — Convert multiple specs into coordinated prompts
 - `planning-with-files` — Route file-based planning to specialized modes
+- `workflow-router` — Route tasks to the right skill automatically
 
 ### Research
 
@@ -90,6 +120,7 @@ Investigation and analysis skills:
 - `repo-context-sync` — Sync and extract context from repositories
 - `documentation-audit` — Audit documentation for drift and accuracy
 - `health-audit` — Comprehensive repository health check
+- `web-research-external` — External research with structured outputs
 
 ### Forge
 
@@ -107,8 +138,8 @@ Knowledge cultivation and memory management:
 - `memory-garden` — Write structured memory entries for context management
 - `seed-extraction` — Extract reusable patterns from experiences
 - `seed-library` — Access and apply Dojo Seed Patches
-- `compression-ritual` — Distill conversation history into memory artifacts
 - `seed-to-skill-converter` — Elevate proven seeds into full skills
+- `compression-ritual` — Distill conversation history into memory artifacts
 
 ### Orchestration
 
@@ -136,6 +167,8 @@ Specialized utilities:
 - `file-management` — Organize files and directories flexibly
 - `product-positioning` — Reframe binary product decisions
 - `multi-surface-strategy` — Design coherent multi-surface strategies
+- `mcp-server-builder` — Scaffold MCP server implementations
+- `mcp-cloudflare-builder` — Build MCP servers on Cloudflare Workers
 
 ## Orchestration Tools
 
@@ -146,6 +179,37 @@ Dojo Genesis provides three agent tools for project state management:
 - `dojo_update_state` — Updates the project's phase, track status, or decision log
 
 These tools enable agents to maintain continuity across conversations and channels.
+
+## Lifecycle Hooks
+
+The plugin registers three hooks that fire automatically:
+
+| Hook | When | What It Does |
+|------|------|-------------|
+| `before-agent-start` | Before any agent response | Injects active project context into the agent's awareness |
+| `after-tool-call` | After tool execution | Updates project state when artifacts are saved |
+| `agent-end` | After the agent completes | Prompts for pipeline stage updates |
+
+## Directory Structure
+
+```
+openclaw-dojo-genesis-plugin/
+├── src/
+│   ├── commands/      — /dojo command handlers
+│   ├── orchestration/ — Multi-agent coordination logic
+│   ├── skills/        — Skill index and registry
+│   ├── state/         — Project state management
+│   ├── ui/            — Channel-agnostic output formatters
+│   └── utils/         — Shared utilities
+├── skills/            — 44 skill definitions (SKILL.md format)
+├── hooks/             — 3 lifecycle hooks
+│   ├── before-agent-start/
+│   ├── after-tool-call/
+│   └── agent-end/
+├── openclaw.plugin.json   — Plugin manifest
+├── index.ts               — Plugin entry point
+└── dist/                  — Compiled output
+```
 
 ## Configuration
 
@@ -169,17 +233,23 @@ The plugin stores project state in `~/.openclaw/dojo-genesis-plugin/` by default
 Project directories contain:
 
 - `project.json` — Current phase, tracks, decisions
+- `scouts/` — Strategic scout outputs
 - `specs/` — Release specifications
 - `prompts/` — Implementation prompts
 - `retros/` — Retrospective artifacts
+
+## Requirements
+
+- OpenClaw 2026.1.0+
+- Node.js 18+
 
 ## Development
 
 Clone and build from source:
 
 ```bash
-git clone https://github.com/TresPies-source/openclaw-dojo-genesis-plugin
-cd openclaw-dojo-genesis-plugin
+git clone https://github.com/DojoGenesis/openclaw-plugin
+cd openclaw-plugin
 npm install
 npm test
 npm run build
@@ -202,3 +272,7 @@ npm run typecheck
 MIT License — see [LICENSE](LICENSE) for details.
 
 For version history and release notes, see [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+*A [Dojo Genesis](https://github.com/DojoGenesis) project by Tres Pies Design.*
