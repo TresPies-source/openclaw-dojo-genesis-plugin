@@ -8,7 +8,7 @@ Specification-driven development orchestration for OpenClaw — turn any channel
 
 ## What It Does
 
-Dojo Genesis transforms OpenClaw into a specification-driven development orchestrator. It treats projects as first-class entities with explicit phases, parallel tracks, decision logs, and artifact management. The plugin bundles 84 first-party skills across 8 categories, enabling strategic scouting, release specification, parallel track decomposition, implementation commissioning, and structured retrospectives. It works seamlessly on every OpenClaw channel — WhatsApp, Telegram, Slack, Discord, WebChat — bringing development discipline to wherever your team communicates.
+Dojo Genesis transforms OpenClaw into a specification-driven development orchestrator. It treats projects as first-class entities with explicit phases, parallel tracks, decision logs, and artifact management. The plugin bundles 88 first-party skills across 9 categories, enabling strategic scouting, release specification, parallel track decomposition, implementation commissioning, structured retrospectives, and end-to-end POC tool delivery. It works seamlessly on every OpenClaw channel — WhatsApp, Telegram, Slack, Discord, WebChat — bringing development discipline to wherever your team communicates.
 
 ## Quick Start
 
@@ -130,6 +130,15 @@ Skill creation and maintenance:
 - `skill-maintenance` — Maintain skill health through systematic review
 - `skill-audit-upgrade` — Audit and upgrade skills to quality standards
 - `process-extraction` — Transform workflows into reusable skills
+
+### Delivery
+
+Idea → live single-page tool pipeline (TresPies POC pattern, deploys to `*.trespies.dev`):
+
+- `poc-tool-forge` — End-to-end: source/pick an idea, build, verify, deploy, document
+- `house-poc-builder` — Build one self-contained tool in the house design system (ip-scout aesthetic), guardrail-enforced
+- `static-tool-verify` — Browser-verify a single-page tool; catch valid-but-wrong output before shipping
+- `cf-pages-trespies-deploy` — Ship a static folder to Cloudflare Pages + bind a custom domain (with the OAuth/DNS gotchas baked in)
 
 ### Garden
 
